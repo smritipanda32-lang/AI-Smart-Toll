@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Users
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mb-4">
+
+    <div class="text-primary small fw-bold">
+        ACCESS MANAGEMENT
+    </div>
+
+    <h2 class="fw-bold">
+        User Management
+    </h2>
+
+    <p class="text-muted">
+        Manage registered system users and roles.
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for user in users %}
+
+                <tr>
+
+                    <td>
+                        #{{ user.id }}
+                    </td>
+
+                    <td>
+                        <strong>
+                            {{ user.name }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ user.email }}
+                    </td>
+
+                    <td>
+
+                        <span class="badge bg-primary">
+
+                            {{ user.role|capitalize }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

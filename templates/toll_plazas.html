@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+
+{% block title %}
+Toll Plazas - AI TollGuard
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Toll Plazas</h1>
+
+            <p>
+                Manage toll plazas and their toll charges.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ADD TOLL PLAZA -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Add Toll Plaza</h2>
+
+                <p>
+                    Enter the toll plaza information below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <!-- PLAZA NAME -->
+                <div class="form-group">
+
+                    <label for="plaza_name">
+                        Plaza Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="plaza_name"
+                        name="plaza_name"
+                        placeholder="Example: Mumbai Central"
+                        maxlength="100"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- LOCATION -->
+                <div class="form-group">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="Example: Mumbai, Maharashtra"
+                        maxlength="150"
+                    >
+
+                </div>
+
+
+                <!-- TOLL AMOUNT -->
+                <div class="form-group">
+
+                    <label for="toll_amount">
+                        Toll Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="toll_amount"
+                        name="toll_amount"
+                        placeholder="Example: 100"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Add Toll Plaza
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- REGISTERED TOLL PLAZAS -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>Registered Toll Plazas</h2>
+
+                <p>
+                    Toll plazas currently stored in the system.
+                </p>
+
+            </div>
+
+
+            <div class="plaza-count">
+
+                {{ toll_plazas|length }} Plazas
+
+            </div>
+
+        </div>
+
+
+        {% if toll_plazas %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Plaza Name</th>
+
+                        <th>Location</th>
+
+                        <th>Toll Amount</th>
+
+                        <th>Created On</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for plaza in toll_plazas %}
+
+                    <tr>
+
+                        <td>
+                            {{ plaza.id }}
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ plaza.plaza_name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if plaza.location %}
+
+                                {{ plaza.location }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            ₹{{ "%.2f"|format(plaza.toll_amount) }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ plaza.created_at.strftime('%d-%m-%Y') }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🛣️
+            </div>
+
+            <h3>No Toll Plazas Registered</h3>
+
+            <p>
+                Add your first toll plaza using the form above.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PAGE STYLING
+     ===================================================== -->
+
+<style>
+
+.page-container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.page-header p {
+    margin-top: 7px;
+    color: #6b7280;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.card-header p {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.form-actions {
+    margin-top: 22px;
+}
+
+.btn-primary {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.plaza-count {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th {
+    text-align: left;
+    padding: 14px;
+    font-size: 13px;
+    color: #475569;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px;
+}
+
+.empty-state p {
+    color: #6b7280;
+}
+
+@media (max-width: 800px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-container {
+        padding: 20px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

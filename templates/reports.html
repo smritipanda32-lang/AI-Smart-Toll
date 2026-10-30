@@ -1,0 +1,643 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Analytics
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+
+    <div class="text-primary small fw-bold">
+        DATA INTELLIGENCE
+    </div>
+
+    <h2 class="fw-bold">
+        Reports & Analytics
+    </h2>
+
+    <p class="text-muted">
+        Overview of toll activity and fraud detection.
+    </p>
+
+</div>
+
+
+<!-- =========================================================
+     SUMMARY CARDS
+     ========================================================= -->
+
+<div class="row g-4">
+
+
+    <!-- TOTAL TRANSACTIONS -->
+
+    <div class="col-md-3">
+
+        <div class="card dashboard-card">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    TOTAL TRANSACTIONS
+                </small>
+
+                <h2 class="fw-bold mt-2">
+                    {{ total or 0 }}
+                </h2>
+
+                <small class="text-muted">
+                    All recorded activity
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NORMAL -->
+
+    <div class="col-md-3">
+
+        <div
+            class="card dashboard-card"
+            style="border-left-color:#18a957 !important;">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    NORMAL
+                </small>
+
+                <h2 class="fw-bold text-success mt-2">
+                    {{ normal or 0 }}
+                </h2>
+
+                <small class="text-muted">
+                    Verified transactions
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FRAUD -->
+
+    <div class="col-md-3">
+
+        <div
+            class="card dashboard-card"
+            style="border-left-color:#e84b4b !important;">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    FRAUD ALERTS
+                </small>
+
+                <h2 class="fw-bold text-danger mt-2">
+                    {{ fraud or 0 }}
+                </h2>
+
+                <small class="text-muted">
+                    Suspicious activity
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- REVENUE -->
+
+    <div class="col-md-3">
+
+        <div
+            class="card dashboard-card"
+            style="border-left-color:#1769e0 !important;">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    VERIFIED REVENUE
+                </small>
+
+                <h2 class="fw-bold text-primary mt-2">
+                    ₹{{ "%.2f"|format(total_revenue or 0) }}
+                </h2>
+
+                <small class="text-muted">
+                    From normal transactions
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FRAUD RATE + POTENTIAL FRAUD AMOUNT
+     ========================================================= -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- FRAUD RATE -->
+
+    <div class="col-md-6">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    FRAUD RATE
+                </small>
+
+                <h3 class="fw-bold text-danger mt-2">
+
+                    {% if total and total > 0 %}
+
+                        {{ "%.1f"|format((fraud / total) * 100) }}%
+
+                    {% else %}
+
+                        0.0%
+
+                    {% endif %}
+
+                </h3>
+
+                <small class="text-muted">
+                    Percentage of transactions identified as suspicious
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- POTENTIAL FRAUD AMOUNT -->
+
+    <div class="col-md-6">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    POTENTIAL FRAUD AMOUNT
+                </small>
+
+                <h3 class="fw-bold text-danger mt-2">
+                    ₹{{ "%.2f"|format(fraud_loss or 0) }}
+                </h3>
+
+                <small class="text-muted">
+                    Amount associated with suspicious transactions
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     AI ANALYTICS
+     ========================================================= -->
+
+<div class="card mt-4">
+
+    <div class="card-body">
+
+        <div class="mb-4">
+
+            <div class="text-primary small fw-bold">
+                AI MONITORING
+            </div>
+
+            <h5 class="fw-bold mb-1">
+                Transaction Intelligence
+            </h5>
+
+            <p class="text-muted mb-0">
+                Current overview of normal and suspicious
+                toll transactions detected by the system.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- =================================================
+                 NORMAL TRANSACTIONS
+                 ================================================= -->
+
+            <div class="col-md-6">
+
+                <div class="p-4 rounded bg-light">
+
+                    <div
+                        class="d-flex justify-content-between
+                        align-items-center mb-3">
+
+                        <div>
+
+                            <h6 class="fw-bold mb-1">
+                                Normal Transactions
+                            </h6>
+
+                            <small class="text-muted">
+                                Verified activity
+                            </small>
+
+                        </div>
+
+                        <span class="badge bg-success">
+                            {{ normal or 0 }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- NORMAL STATUS BAR -->
+
+                    {% if total and total > 0 %}
+
+                    <div class="progress" style="height:10px;">
+
+                        {% if normal > 0 %}
+
+                        <div
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            aria-label="Normal transactions">
+                        </div>
+
+                        {% else %}
+
+                        <div
+                            class="progress-bar bg-secondary"
+                            role="progressbar"
+                            aria-label="No normal transactions">
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="progress" style="height:10px;">
+
+                        <div
+                            class="progress-bar bg-secondary"
+                            role="progressbar"
+                            aria-label="No transactions">
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <small class="text-muted d-block mt-2">
+
+                        Normal transactions recorded:
+                        <strong>{{ normal or 0 }}</strong>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FRAUD TRANSACTIONS
+                 ================================================= -->
+
+            <div class="col-md-6">
+
+                <div class="p-4 rounded bg-light">
+
+                    <div
+                        class="d-flex justify-content-between
+                        align-items-center mb-3">
+
+                        <div>
+
+                            <h6 class="fw-bold mb-1">
+                                Fraud Alerts
+                            </h6>
+
+                            <small class="text-muted">
+                                Suspicious activity
+                            </small>
+
+                        </div>
+
+                        <span class="badge bg-danger">
+                            {{ fraud or 0 }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- FRAUD STATUS BAR -->
+
+                    {% if total and total > 0 %}
+
+                    <div class="progress" style="height:10px;">
+
+                        {% if fraud > 0 %}
+
+                        <div
+                            class="progress-bar bg-danger"
+                            role="progressbar"
+                            aria-label="Fraud transactions">
+                        </div>
+
+                        {% else %}
+
+                        <div
+                            class="progress-bar bg-secondary"
+                            role="progressbar"
+                            aria-label="No fraud transactions">
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="progress" style="height:10px;">
+
+                        <div
+                            class="progress-bar bg-secondary"
+                            role="progressbar"
+                            aria-label="No fraud transactions">
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <small class="text-muted d-block mt-2">
+
+                        Suspicious transactions detected:
+                        <strong>{{ fraud or 0 }}</strong>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SYSTEM INFORMATION
+             ===================================================== -->
+
+        <div class="row g-4 mt-2">
+
+
+            <!-- AI ENGINE -->
+
+            <div class="col-md-4">
+
+                <div class="border rounded p-3">
+
+                    <small class="text-muted">
+                        AI ENGINE
+                    </small>
+
+                    <h6 class="fw-bold mt-2 mb-0 text-success">
+                        Active
+                    </h6>
+
+                </div>
+
+            </div>
+
+
+            <!-- MONITORING MODE -->
+
+            <div class="col-md-4">
+
+                <div class="border rounded p-3">
+
+                    <small class="text-muted">
+                        MONITORING MODE
+                    </small>
+
+                    <h6 class="fw-bold mt-2 mb-0">
+                        Real-Time
+                    </h6>
+
+                </div>
+
+            </div>
+
+
+            <!-- FRAUD ANALYSIS -->
+
+            <div class="col-md-4">
+
+                <div class="border rounded p-3">
+
+                    <small class="text-muted">
+                        FRAUD ANALYSIS
+                    </small>
+
+                    <h6 class="fw-bold mt-2 mb-0">
+                        Duplicate Detection
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RECENT TRANSACTIONS
+     ========================================================= -->
+
+<div class="card mt-4">
+
+    <div class="card-body">
+
+        <div class="mb-3">
+
+            <h5 class="fw-bold mb-1">
+                Recent Transactions
+            </h5>
+
+            <small class="text-muted">
+                Latest toll activity recorded by the system
+            </small>
+
+        </div>
+
+
+        {% if transactions %}
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>Toll Plaza</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for transaction in transactions %}
+
+                <tr>
+
+                    <!-- ID -->
+
+                    <td>
+                        #{{ transaction.id }}
+                    </td>
+
+
+                    <!-- VEHICLE -->
+
+                    <td>
+                        <strong>
+                            {{ transaction.vehicle_number }}
+                        </strong>
+                    </td>
+
+
+                    <!-- TOLL PLAZA -->
+
+                    <td>
+                        {{ transaction.toll_plaza }}
+                    </td>
+
+
+                    <!-- AMOUNT -->
+
+                    <td>
+                        ₹{{ "%.2f"|format(transaction.transaction_amount or 0) }}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if transaction.status == "Fraud" %}
+
+                        <span class="badge bg-danger">
+                            Fraud
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-success">
+                            Normal
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- DATE -->
+
+                    <td>
+
+                        {% if transaction.transaction_time %}
+
+                            {{ transaction.transaction_time.strftime('%d-%m-%Y') }}
+
+                            <br>
+
+                            <small class="text-muted">
+                                {{ transaction.transaction_time.strftime('%I:%M %p') }}
+                            </small>
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="text-center p-4">
+
+            <p class="text-muted mb-0">
+                No transactions have been recorded yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+

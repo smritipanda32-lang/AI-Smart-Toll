@@ -1,0 +1,696 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Transactions
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+
+    <div class="text-primary small fw-bold">
+        TRANSACTION MONITORING
+    </div>
+
+    <h2 class="fw-bold">
+        Toll Transactions
+    </h2>
+
+    <p class="text-muted">
+        Record vehicle activity and analyse suspicious transactions.
+    </p>
+
+</div>
+
+
+<!-- =========================================================
+     RECORD NEW TRANSACTION
+     ========================================================= -->
+
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold">
+            Record New Transaction
+        </h5>
+
+        <p class="text-muted small">
+            Select a registered vehicle and toll plaza below.
+        </p>
+
+
+        <form method="POST">
+
+            <div class="row g-3">
+
+
+                <!-- =================================================
+                     VEHICLE
+                     ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Vehicle Number
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <select
+                            name="vehicle_number"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Vehicle
+                            </option>
+
+                            {% for vehicle in vehicles %}
+
+                            <option value="{{ vehicle.vehicle_number }}">
+                                {{ vehicle.vehicle_number }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addVehicleModal"
+                            style="white-space: nowrap;">
+
+                            + Add Vehicle
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TOLL PLAZA
+                     ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Toll Plaza
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <select
+                            name="toll_plaza"
+                            id="tollPlazaSelect"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Toll Plaza
+                            </option>
+
+                            {% for plaza in toll_plazas %}
+
+                            <option
+                                value="{{ plaza.plaza_name }}"
+                                data-amount="{{ plaza.toll_amount }}">
+
+                                {{ plaza.plaza_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addPlazaModal"
+                            style="white-space: nowrap;">
+
+                            + Add Plaza
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TOLL AMOUNT
+                     ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Toll Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        name="amount"
+                        id="tollAmount"
+                        class="form-control"
+                        placeholder="Select a toll plaza"
+                        min="1"
+                        step="0.01"
+                        required>
+
+                    <small class="text-muted">
+                        Amount is automatically filled from the selected plaza.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT BUTTON
+                 ================================================= -->
+
+            <button
+                type="submit"
+                class="btn btn-primary mt-4">
+
+                Analyse & Record Transaction
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TRANSACTION HISTORY
+     ========================================================= -->
+
+<div class="card">
+
+    <div class="card-body">
+
+        <div class="mb-3">
+
+            <h5 class="fw-bold mb-1">
+                Transaction History
+            </h5>
+
+            <small class="text-muted">
+                AI monitoring results
+            </small>
+
+        </div>
+
+
+        {% if transactions %}
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>Plaza</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Risk Score</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for t in transactions %}
+
+                <tr>
+
+                    <!-- ID -->
+
+                    <td>
+                        #{{ t.id }}
+                    </td>
+
+
+                    <!-- VEHICLE -->
+
+                    <td>
+                        <strong>
+                            {{ t.vehicle_number }}
+                        </strong>
+                    </td>
+
+
+                    <!-- PLAZA -->
+
+                    <td>
+                        {{ t.toll_plaza }}
+                    </td>
+
+
+                    <!-- AMOUNT -->
+
+                    <td>
+                        ₹{{ "%.2f"|format(t.transaction_amount or 0) }}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if t.status == "Fraud" %}
+
+                        <span class="badge bg-danger">
+                            Fraud
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-success">
+                            Normal
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- RISK SCORE -->
+
+                    <td>
+
+                        {% if t.status == "Fraud" %}
+
+                        <span class="text-danger fw-bold">
+                            85%
+                        </span>
+
+                        {% else %}
+
+                        <span class="text-success fw-bold">
+                            8%
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- DATE / TIME -->
+
+                    <td>
+
+                        {% if t.transaction_time %}
+
+                            {{ t.transaction_time.strftime('%d-%m-%Y') }}
+
+                            <br>
+
+                            <small class="text-muted">
+                                {{ t.transaction_time.strftime('%I:%M %p') }}
+                            </small>
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-box p-4 text-center">
+
+            <p class="mb-0 text-muted">
+                No transactions have been recorded yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADD VEHICLE MODAL
+     ========================================================= -->
+
+<div
+    class="modal fade"
+    id="addVehicleModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Add New Vehicle
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('add_vehicle_from_transaction') }}">
+
+                <div class="modal-body">
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Vehicle Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="vehicle_number"
+                            class="form-control"
+                            placeholder="Example: MH12CD3456"
+                            required>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Vehicle Type
+                        </label>
+
+                        <select
+                            name="vehicle_type"
+                            class="form-select">
+
+                            <option value="">
+                                Select Type
+                            </option>
+
+                            <option value="Car">
+                                Car
+                            </option>
+
+                            <option value="SUV">
+                                SUV
+                            </option>
+
+                            <option value="Truck">
+                                Truck
+                            </option>
+
+                            <option value="Bus">
+                                Bus
+                            </option>
+
+                            <option value="Motorcycle">
+                                Motorcycle
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Owner Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="owner_name"
+                            class="form-control"
+                            placeholder="Enter owner name">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Add Vehicle
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADD TOLL PLAZA MODAL
+     ========================================================= -->
+
+<div
+    class="modal fade"
+    id="addPlazaModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Add New Toll Plaza
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('add_plaza_from_transaction') }}">
+
+                <div class="modal-body">
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Plaza Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="plaza_name"
+                            class="form-control"
+                            placeholder="Example: Mumbai Western Expressway"
+                            required>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Location
+                        </label>
+
+                        <input
+                            type="text"
+                            name="location"
+                            class="form-control"
+                            placeholder="Example: Mumbai, Maharashtra">
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Toll Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            name="toll_amount"
+                            class="form-control"
+                            placeholder="100"
+                            min="0"
+                            step="0.01"
+                            value="0">
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Add Toll Plaza
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     AUTOMATIC TOLL AMOUNT
+     ========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const plazaSelect =
+            document.getElementById(
+                "tollPlazaSelect"
+            );
+
+        const amountInput =
+            document.getElementById(
+                "tollAmount"
+            );
+
+
+        if (!plazaSelect || !amountInput) {
+            return;
+        }
+
+
+        plazaSelect.addEventListener(
+            "change",
+            function () {
+
+                const selectedOption =
+                    plazaSelect.options[
+                        plazaSelect.selectedIndex
+                    ];
+
+
+                const amount =
+                    selectedOption.getAttribute(
+                        "data-amount"
+                    );
+
+
+                if (amount !== null && amount !== "") {
+
+                    amountInput.value = amount;
+
+                } else {
+
+                    amountInput.value = "";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+{% endblock %}
+

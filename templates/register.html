@@ -1,0 +1,610 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Create Account
+{% endblock %}
+
+{% block auth_content %}
+
+<style>
+    .register-page {
+        min-height: 100vh;
+        background: #f6f8fc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .register-container {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .register-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 48px;
+    }
+
+    .brand-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #1677ff, #2d8cff);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 5px 12px rgba(22, 119, 255, 0.18);
+    }
+
+    .brand-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #14213d;
+    }
+
+    .register-label {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: #1677ff;
+        margin-bottom: 12px;
+    }
+
+    .register-title {
+        margin: 0;
+        font-size: 31px;
+        line-height: 1.2;
+        font-weight: 750;
+        color: #13213c;
+    }
+
+    .register-subtitle {
+        margin-top: 9px;
+        margin-bottom: 30px;
+        color: #71809a;
+        font-size: 13px;
+    }
+
+    .register-alert {
+        border-radius: 8px;
+        padding: 13px 14px;
+        margin-bottom: 20px;
+        font-size: 13px;
+    }
+
+    .register-form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: #17243d;
+        margin-bottom: 9px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8090aa;
+        font-size: 13px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .register-input {
+        width: 100%;
+        height: 52px;
+        border: 1px solid #d5ddeb;
+        border-radius: 11px;
+        background: #ffffff;
+        padding: 0 16px 0 42px;
+        font-size: 13px;
+        color: #18253e;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .register-input::placeholder {
+        color: #8491a8;
+    }
+
+    .register-input:focus {
+        border-color: #2681f5;
+        box-shadow: 0 0 0 3px rgba(38, 129, 245, 0.10);
+    }
+
+    .register-button {
+        width: 100%;
+        height: 53px;
+        border: none;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #146fe8, #2788f7);
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 4px;
+        box-shadow: 0 10px 22px rgba(30, 116, 235, 0.20);
+        transition: all 0.2s ease;
+    }
+
+    .register-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 13px 25px rgba(30, 116, 235, 0.27);
+    }
+
+    .register-button:active {
+        transform: translateY(0);
+    }
+
+    .button-arrow {
+        margin-left: 9px;
+        font-size: 16px;
+    }
+
+    .login-link-container {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 12px;
+        color: #7c89a1;
+    }
+
+    .login-link {
+        color: #176fe8;
+        font-weight: 700;
+        text-decoration: none;
+        margin-left: 4px;
+    }
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
+
+    .password-message {
+        display: none;
+        font-size: 12px;
+        margin-top: 8px;
+        line-height: 1.5;
+    }
+
+    .password-requirements {
+        font-size: 11px;
+        color: #71809a;
+        margin-top: 8px;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 500px) {
+        .register-page {
+            padding: 30px 18px;
+        }
+
+        .register-brand {
+            margin-bottom: 38px;
+        }
+
+        .register-title {
+            font-size: 27px;
+        }
+    }
+</style>
+
+
+<div class="register-page">
+
+    <div class="register-container">
+
+        <!-- BRAND -->
+
+        <div class="register-brand">
+
+            <div class="brand-logo">
+                AI
+            </div>
+
+            <div class="brand-name">
+                AI Smart Toll
+            </div>
+
+        </div>
+
+
+        <!-- HEADER -->
+
+        <div class="register-label">
+            NEW USER
+        </div>
+
+        <h1 class="register-title">
+            Create your account
+        </h1>
+
+        <p class="register-subtitle">
+            Register to access the intelligent toll management platform.
+        </p>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div
+                        class="alert alert-{{ category }} register-alert"
+                        role="alert"
+                    >
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- REGISTRATION FORM -->
+
+        <form
+            method="POST"
+            action="{{ url_for('register') }}"
+            class="register-form"
+            id="registerForm"
+        >
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="name" class="form-label">
+                    Full name
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">•</span>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="register-input"
+                        placeholder="Enter your full name"
+                        value="{{ request.form.get('name', '') }}"
+                        required
+                        autocomplete="name"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email" class="form-label">
+                    Email address
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">@</span>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="register-input"
+                        placeholder="Enter your email"
+                        value="{{ request.form.get('email', '') }}"
+                        required
+                        autocomplete="email"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password" class="form-label">
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">•••</span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="register-input"
+                        placeholder="Create a password"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="confirm_password" class="form-label">
+                    Confirm password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">•••</span>
+
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        class="register-input"
+                        placeholder="Confirm your password"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <div class="password-requirements">
+                    Password must contain at least 8 characters,
+                    one uppercase letter, one lowercase letter,
+                    one number and one special character.
+                </div>
+
+                <div
+                    id="passwordMessage"
+                    class="password-message"
+                    aria-live="polite"
+                ></div>
+
+            </div>
+
+
+            <!-- CREATE ACCOUNT -->
+
+            <button
+                type="submit"
+                class="register-button"
+            >
+                Create Account
+                <span class="button-arrow">→</span>
+            </button>
+
+        </form>
+
+
+        <!-- LOGIN LINK -->
+
+        <div class="login-link-container">
+
+            Already have an account?
+
+            <a
+                href="{{ url_for('login') }}"
+                class="login-link"
+            >
+                Sign in
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PASSWORD VALIDATION -->
+
+<script>
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const confirmPasswordInput =
+        document.getElementById("confirm_password");
+
+    const passwordMessage =
+        document.getElementById("passwordMessage");
+
+
+    function showPasswordMessage(message, color) {
+
+        passwordMessage.textContent = message;
+
+        passwordMessage.style.color = color;
+
+        passwordMessage.style.display = "block";
+
+    }
+
+
+    function validatePassword() {
+
+        const password = passwordInput.value;
+
+        const confirmPassword =
+            confirmPasswordInput.value;
+
+
+        if (password.length === 0 &&
+            confirmPassword.length === 0) {
+
+            passwordMessage.style.display = "none";
+
+            return true;
+
+        }
+
+
+        if (password.length > 0 && password.length < 8) {
+
+            showPasswordMessage(
+                "Password must contain at least 8 characters.",
+                "red"
+            );
+
+            return false;
+
+        }
+
+
+        if (confirmPassword === "") {
+
+            passwordMessage.style.display = "none";
+
+            return true;
+
+        }
+
+
+        if (password === confirmPassword) {
+
+            showPasswordMessage(
+                "✓ Passwords match.",
+                "green"
+            );
+
+            return true;
+
+        }
+
+
+        showPasswordMessage(
+            "Passwords do not match.",
+            "red"
+        );
+
+        return false;
+
+    }
+
+
+    passwordInput.addEventListener(
+        "input",
+        validatePassword
+    );
+
+    confirmPasswordInput.addEventListener(
+        "input",
+        validatePassword
+    );
+
+
+    registerForm.addEventListener(
+        "submit",
+        function(event) {
+
+            const password = passwordInput.value;
+
+            const confirmPassword =
+                confirmPasswordInput.value;
+
+
+            if (password.length < 8) {
+
+                event.preventDefault();
+
+                showPasswordMessage(
+                    "Password must contain at least 8 characters.",
+                    "red"
+                );
+
+                return;
+
+            }
+
+
+            const hasUppercase =
+                /[A-Z]/.test(password);
+
+            const hasLowercase =
+                /[a-z]/.test(password);
+
+            const hasNumber =
+                /[0-9]/.test(password);
+
+            const hasSpecialCharacter =
+                /[^A-Za-z0-9]/.test(password);
+
+
+            if (
+                !hasUppercase ||
+                !hasLowercase ||
+                !hasNumber ||
+                !hasSpecialCharacter
+            ) {
+
+                event.preventDefault();
+
+                showPasswordMessage(
+                    "Use uppercase, lowercase, a number and a special character.",
+                    "red"
+                );
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                event.preventDefault();
+
+                showPasswordMessage(
+                    "Passwords do not match.",
+                    "red"
+                );
+
+                return;
+
+            }
+
+        }
+
+    );
+
+</script>
+
+{% endblock %}

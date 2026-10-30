@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Alerts
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mb-4">
+
+    <div class="text-primary small fw-bold">
+        SECURITY CENTER
+    </div>
+
+    <h2 class="fw-bold">
+        System Alerts
+    </h2>
+
+    <p class="text-muted">
+        Fraud detection alerts and transaction notifications.
+    </p>
+
+</div>
+
+
+{% if notifications %}
+
+
+{% for n in notifications %}
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <div class="d-flex align-items-start gap-3">
+
+            <div>
+
+                {% if n.type == "danger" %}
+
+                <span class="badge bg-danger">
+                    ALERT
+                </span>
+
+                {% else %}
+
+                <span class="badge bg-success">
+                    VERIFIED
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                <h6 class="fw-bold mb-1">
+                    {{ n.title }}
+                </h6>
+
+                <p class="text-muted mb-1">
+                    {{ n.message }}
+                </p>
+
+                <small class="text-muted">
+                    {{ n.time }}
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+
+{% else %}
+
+
+<div class="card">
+
+    <div class="card-body empty-box">
+
+        <h5>
+            System Clear
+        </h5>
+
+        <p class="mb-0">
+            No notifications or fraud alerts at this time.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+{% endblock %}

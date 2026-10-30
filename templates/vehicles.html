@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block title %}
+Vehicles - AI TollGuard
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Vehicles</h1>
+
+            <p>
+                Register and manage vehicles used in toll transactions.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ADD VEHICLE CARD -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Add Vehicle</h2>
+
+                <p>
+                    Enter the vehicle details below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <!-- VEHICLE NUMBER -->
+                <div class="form-group">
+
+                    <label for="vehicle_number">
+                        Vehicle Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="vehicle_number"
+                        name="vehicle_number"
+                        placeholder="Example: MH12AB1234"
+                        maxlength="20"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- VEHICLE TYPE -->
+                <div class="form-group">
+
+                    <label for="vehicle_type">
+                        Vehicle Type
+                    </label>
+
+                    <select
+                        id="vehicle_type"
+                        name="vehicle_type"
+                    >
+
+                        <option value="">
+                            Select Vehicle Type
+                        </option>
+
+                        <option value="Car">
+                            Car
+                        </option>
+
+                        <option value="Bike">
+                            Bike
+                        </option>
+
+                        <option value="Bus">
+                            Bus
+                        </option>
+
+                        <option value="Truck">
+                            Truck
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- OWNER NAME -->
+                <div class="form-group">
+
+                    <label for="owner_name">
+                        Owner Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="owner_name"
+                        name="owner_name"
+                        placeholder="Enter owner name"
+                        maxlength="100"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Add Vehicle
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- REGISTERED VEHICLES -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>Registered Vehicles</h2>
+
+                <p>
+                    Vehicles currently stored in the system.
+                </p>
+
+            </div>
+
+            <div class="vehicle-count">
+                {{ vehicles|length }} Vehicles
+            </div>
+
+        </div>
+
+
+        {% if vehicles %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Vehicle Number</th>
+
+                        <th>Vehicle Type</th>
+
+                        <th>Owner Name</th>
+
+                        <th>Registered On</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for vehicle in vehicles %}
+
+                    <tr>
+
+                        <td>
+                            {{ vehicle.id }}
+                        </td>
+
+                        <td>
+
+                            <strong>
+                                {{ vehicle.vehicle_number }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            {% if vehicle.vehicle_type %}
+
+                                {{ vehicle.vehicle_type }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if vehicle.owner_name %}
+
+                                {{ vehicle.owner_name }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if vehicle.created_at %}
+
+                                {{ vehicle.created_at.strftime('%d-%m-%Y') }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🚗
+            </div>
+
+            <h3>
+                No Vehicles Registered
+            </h3>
+
+            <p>
+                Add your first vehicle using the form above.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PAGE STYLING
+     ===================================================== -->
+
+<style>
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+
+.page-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #111827;
+}
+
+
+.page-header p {
+    margin-top: 7px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+}
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+
+.card-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+
+.card-header p {
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+}
+
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    font-size: 14px;
+    background: #ffffff;
+    color: #111827;
+    outline: none;
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+.form-actions {
+    margin-top: 22px;
+}
+
+
+.btn-primary {
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+
+.vehicle-count {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+thead {
+    background: #f8fafc;
+}
+
+
+th {
+    text-align: left;
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #374151;
+}
+
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+
+.empty-state h3 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+
+.empty-state p {
+    color: #6b7280;
+    margin: 0;
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 800px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-container {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+}
+
+</style>
+
+{% endblock %}

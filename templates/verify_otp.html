@@ -1,0 +1,280 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+AI Smart Toll - Verify OTP
+{% endblock %}
+
+{% block auth_content %}
+
+<div class="professional-login">
+
+    <!-- =========================================
+         LEFT VISUAL AREA
+         ========================================= -->
+
+    <section class="login-visual">
+
+        <div class="visual-top">
+
+            <div class="visual-brand">
+
+                <div class="road-logo">
+                    AI
+                </div>
+
+                <div>
+                    <strong>AI TollGuard</strong>
+                    <span>Fraud Detection</span>
+                </div>
+
+            </div>
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                <span>SECURE SYSTEM</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="visual-content">
+
+            <span class="visual-label">
+                ACCOUNT SECURITY
+            </span>
+
+            <h1>
+                Verify Your
+                <span>Identity</span>
+            </h1>
+
+            <p>
+                Enter the verification code generated
+                for your password recovery request.
+                Check your VS Code terminal to find your OTP.
+            </p>
+
+            <div class="technology-grid">
+
+                <div class="technology-card">
+
+                    <div class="technology-icon">
+                        🔐
+                    </div>
+
+                    <div>
+                        <strong>Secure Verification</strong>
+                        <span>OTP protected access</span>
+                    </div>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <div class="technology-icon">
+                        🛡️
+                    </div>
+
+                    <div>
+                        <strong>Account Protection</strong>
+                        <span>Identity verification</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="road-visual">
+
+            <div class="road-line line-one"></div>
+
+            <div class="road-line line-two"></div>
+
+            <div class="road-car">
+                🚘
+            </div>
+
+            <div class="scan-line"></div>
+
+            <div class="scan-label">
+                SECURE OTP VERIFICATION
+            </div>
+
+        </div>
+
+
+        <div class="visual-footer">
+
+            <span>
+                AI-powered toll security
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                Fraud Detection System
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         RIGHT OTP PANEL
+         ========================================= -->
+
+    <section class="login-panel">
+
+        <div class="login-box">
+
+            <div class="login-logo">
+
+                <div class="mini-logo">
+                    🔐
+                </div>
+
+            </div>
+
+
+            <div class="login-heading">
+
+                <h2>
+                    Verify OTP
+                </h2>
+
+                <p>
+                    Enter the 6-digit verification code
+                    displayed in the VS Code terminal
+                    to continue.
+                </p>
+
+            </div>
+
+
+            <!-- =================================
+                 FLASH MESSAGES
+                 ================================= -->
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div class="login-message {{ category }}">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- =================================
+                 OTP FORM
+                 ================================= -->
+
+            <form
+                method="POST"
+                action="{{ url_for('verify_otp') }}"
+            >
+
+                <div class="field">
+
+                    <div class="field-header">
+
+                        <label for="otp">
+                            Verification Code
+                        </label>
+
+                    </div>
+
+
+                    <div class="input-container">
+
+                        <span>🔢</span>
+
+                        <input
+                            type="text"
+                            id="otp"
+                            name="otp"
+                            placeholder="Enter 6-digit OTP"
+                            maxlength="6"
+                            minlength="6"
+                            pattern="[0-9]{6}"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="professional-login-button"
+                >
+
+                    Verify OTP
+
+                </button>
+
+            </form>
+
+
+            <div class="create-account">
+
+                <a href="{{ url_for('forgot_password') }}">
+                    ← Request a new OTP
+                </a>
+
+            </div>
+
+
+            <div class="secure-information">
+
+                <div class="secure-icon">
+                    🛡️
+                </div>
+
+                <div>
+
+                    <strong>
+                        Secure Verification
+                    </strong>
+
+                    <p>
+                        Your OTP is valid for 5 minutes
+                        and allows a maximum of 5 attempts.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
